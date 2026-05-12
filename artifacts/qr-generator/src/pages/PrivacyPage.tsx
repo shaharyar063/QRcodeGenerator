@@ -2,8 +2,8 @@ import { useSEO } from "@/hooks/useSEO";
 
 export default function PrivacyPage() {
   useSEO({
-    title: "Privacy Policy | QR Code Generator",
-    description: "Read our privacy policy to understand how we protect your data.",
+    title: "Privacy Policy | QR Generator — No Data Stored, No Tracking",
+    description: "QR Generator processes everything in your browser. We never store your QR code data on our servers. Read our full privacy policy.",
     canonicalPath: "/privacy-policy"
   });
 

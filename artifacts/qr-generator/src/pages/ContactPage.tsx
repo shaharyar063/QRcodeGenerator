@@ -7,8 +7,8 @@ import { Mail, MessageSquare } from "lucide-react";
 
 export default function ContactPage() {
   useSEO({
-    title: "Contact Us | QR Code Generator",
-    description: "Get in touch with the team behind the free QR Code Generator app.",
+    title: "Contact | QR Generator — Free QR Code Generator Support",
+    description: "Questions about our free QR code generator? Send us a message. We typically respond within 24 hours.",
     canonicalPath: "/contact"
   });
 
