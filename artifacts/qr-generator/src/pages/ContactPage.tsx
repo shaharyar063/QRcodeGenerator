@@ -14,10 +14,10 @@ export default function ContactPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <section className="pt-16 pb-12 px-4 bg-muted/30">
+      <section className="pt-8 pb-10 px-4 bg-muted/30">
         <div className="container mx-auto max-w-3xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight mb-4">Contact Us</h1>
-          <p className="text-lg text-muted-foreground">
+          <h1 className="text-3xl font-bold tracking-tight mb-2">Contact Us</h1>
+          <p className="text-base text-muted-foreground">
             Have a question, feedback, or a feature request? We'd love to hear from you.
           </p>
         </div>

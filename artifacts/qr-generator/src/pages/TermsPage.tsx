@@ -9,10 +9,10 @@ export default function TermsPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <section className="pt-16 pb-12 px-4 bg-muted/30 border-b">
+      <section className="pt-8 pb-10 px-4 bg-muted/30 border-b">
         <div className="container mx-auto max-w-3xl">
-          <h1 className="text-4xl font-bold tracking-tight mb-4">Terms of Service</h1>
-          <p className="text-muted-foreground">Last updated: May 2024</p>
+          <h1 className="text-3xl font-bold tracking-tight mb-2">Terms of Service</h1>
+          <p className="text-muted-foreground text-sm">Last updated: May 2024</p>
         </div>
       </section>
 

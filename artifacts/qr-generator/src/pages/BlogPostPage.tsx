@@ -50,7 +50,7 @@ export default function BlogPostPage() {
         </div>
       </div>
 
-      <article className="py-16 bg-background">
+      <article className="py-10 bg-background">
         <div className="container mx-auto px-4 max-w-3xl">
           <Link href="/blog" className="inline-flex items-center text-sm font-medium text-primary hover:underline mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />

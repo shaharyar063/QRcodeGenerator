@@ -74,16 +74,13 @@ export default function QRTypePage() {
         </div>
       </div>
 
-      <section className="pt-12 pb-16 px-4 bg-gradient-to-b from-background to-muted/20">
-        <div className="container mx-auto text-center mb-10 max-w-3xl">
-          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto mb-6">
-            <typeConfig.icon className="w-8 h-8" />
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+      <section className="pt-7 pb-12 px-4 bg-gradient-to-b from-background to-muted/20">
+        <div className="container mx-auto text-center mb-8 max-w-3xl">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
             {typeConfig.label} QR Code Generator
           </h1>
-          <p className="text-lg text-muted-foreground">
-            Create a custom, high-quality {typeConfig.label} QR code for free. 
+          <p className="text-base text-muted-foreground">
+            Create a custom, high-quality {typeConfig.label} QR code for free.
             Customize colors, add your logo, and download in vector formats.
           </p>
         </div>
