@@ -114,6 +114,12 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
+  /* Brand signature variables */
+  --brand-amber: #F59E0B;
+  --brand-amber-deep: #D97706;
+  --brand-slate: #1E293B;
+  --brand-cream: #FFFBEB;
+
   --sidebar-primary-border: hsl(var(--sidebar-primary));
   --sidebar-accent-border: hsl(var(--sidebar-accent));
   --primary-border: hsl(var(--primary));

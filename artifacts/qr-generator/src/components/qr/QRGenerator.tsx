@@ -6,6 +6,7 @@ import { QRCustomizer } from './QRCustomizer';
 import { QRPreview } from './QRPreview';
 import { formatQRData } from '@/lib/qr-utils';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { BrandCorner } from '@/components/brand/BrandCorner';
 
 interface QRGeneratorProps {
   initialType?: string;
@@ -29,7 +30,6 @@ export function QRGenerator({ initialType }: QRGeneratorProps) {
   const [formData, setFormData] = useState<any>({});
   const [debouncedFormData, setDebouncedFormData] = useState<any>({});
 
-  // Debounce form data to prevent lag during rapid typing
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedFormData(formData);
@@ -37,14 +37,12 @@ export function QRGenerator({ initialType }: QRGeneratorProps) {
     return () => clearTimeout(timer);
   }, [formData]);
 
-  // Update active type when initialType prop changes (route changes)
   useEffect(() => {
     if (initialType && initialType !== activeType) {
       setActiveType(initialType);
     }
   }, [initialType]);
 
-  // Save selected type
   useEffect(() => {
     setSavedType(activeType);
   }, [activeType, setSavedType]);
@@ -58,7 +56,13 @@ export function QRGenerator({ initialType }: QRGeneratorProps) {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto bg-card rounded-xl shadow-lg border overflow-hidden">
+    <div className="relative w-full max-w-6xl mx-auto bg-card rounded-2xl shadow-xl border-2 border-border overflow-hidden">
+      {/* Signature brand corners on the outer tool card */}
+      <BrandCorner size={20} opacity={0.18} className="absolute top-3 left-3 pointer-events-none z-10" />
+      <BrandCorner size={20} opacity={0.18} className="absolute top-3 right-3 pointer-events-none z-10 rotate-90" />
+      <BrandCorner size={20} opacity={0.18} className="absolute bottom-3 left-3 pointer-events-none z-10 -rotate-90" />
+      <BrandCorner size={20} opacity={0.18} className="absolute bottom-3 right-3 pointer-events-none z-10 rotate-180" />
+
       <div className="flex flex-col lg:flex-row">
         {/* Left Column: Controls */}
         <div className="flex-1 border-b lg:border-b-0 lg:border-r p-6 md:p-8 space-y-8">
