@@ -211,18 +211,19 @@ export function QRCustomizer({ settings, onChange }: QRCustomizerProps) {
         <AccordionContent className="pt-4 pb-2 space-y-6">
           <div className="space-y-3">
             <div className="flex justify-between">
-              <Label>Size ({settings.width || 256}px)</Label>
+              <Label>Preview Size ({settings.width || 280}px)</Label>
             </div>
             <Slider 
-              min={128} 
-              max={512} 
-              step={8} 
-              value={[settings.width || 256]} 
+              min={180} 
+              max={360} 
+              step={10} 
+              value={[settings.width || 280]} 
               onValueChange={(v) => {
                 updateSetting('', 'width', v[0]);
                 updateSetting('', 'height', v[0]);
               }} 
             />
+            <p className="text-xs text-muted-foreground">Controls how large the preview appears. Download quality is set separately above the download buttons.</p>
           </div>
           
           <div className="space-y-3">

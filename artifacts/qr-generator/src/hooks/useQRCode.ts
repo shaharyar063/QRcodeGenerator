@@ -11,9 +11,9 @@ export function useQRCode(options: Partial<Options>) {
       height: 300,
       data: "https://qrcodegenerator.app",
       imageOptions: { crossOrigin: "anonymous", margin: 10 },
-      ...options
+      ...options,
     });
-    
+
     setQrCode(qr);
 
     if (ref.current) {
@@ -28,8 +28,18 @@ export function useQRCode(options: Partial<Options>) {
     }
   }, [qrCode, options]);
 
-  const download = (extension: "png" | "svg" | "jpeg") => {
-    if (qrCode) {
+  const download = (extension: "png" | "svg" | "jpeg", downloadSize?: number) => {
+    if (!qrCode) return;
+
+    if (downloadSize && downloadSize !== (options.width ?? 300)) {
+      // Create a separate high-res instance just for downloading
+      const highResQR = new QRCodeStyling({
+        ...options,
+        width: downloadSize,
+        height: downloadSize,
+      });
+      highResQR.download({ name: "qr-code", extension });
+    } else {
       qrCode.download({ name: "qr-code", extension });
     }
   };
