@@ -1,7 +1,7 @@
 import { QRGenerator } from "@/components/qr/QRGenerator";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ShieldCheck, Zap, Download, Paintbrush, Star, Users, Globe, Lock } from "lucide-react";
+import { ShieldCheck, Zap, Download, Paintbrush, Users, Globe, Lock } from "lucide-react";
 import { qrTypes } from "@/data/qr-types";
 import { faqData } from "@/data/faq";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -48,10 +48,6 @@ export default function HomePage() {
       {/* Hero */}
       <section className="pt-6 pb-12 md:pt-8 md:pb-14 px-4 bg-gradient-to-b from-amber-50/60 to-background">
         <div className="container mx-auto text-center mb-8 max-w-3xl">
-          <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1.5 rounded-full mb-4 border border-amber-200">
-            <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-            100% Free · No Signup · Codes Never Expire
-          </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-3">
             Free <span className="text-primary">QR Code</span> Generator
           </h1>

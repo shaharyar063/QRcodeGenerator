@@ -3,7 +3,7 @@ import { QRGenerator } from "@/components/qr/QRGenerator";
 import { qrTypes } from "@/data/qr-types";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "wouter";
-import { ChevronRight, CheckCircle2, Download, Paintbrush, ShieldCheck } from "lucide-react";
+import { ChevronRight, CheckCircle2, Download, Paintbrush, ShieldCheck, Zap } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import NotFoundPage from "./not-found";
 
@@ -326,42 +326,37 @@ const typeContent: Record<string, {
 
 export default function QRTypePage() {
   const [match, params] = useRoute("/qr-code-generator/:type");
-  
-  if (!match || !params?.type) {
-    return <NotFoundPage />;
-  }
 
-  const typeConfig = qrTypes.find(t => t.slug === params.type);
+  const typeConfig = qrTypes.find(t => t.slug === params?.type);
 
-  if (!typeConfig) {
-    return <NotFoundPage />;
-  }
+  const content = typeConfig
+    ? (typeContent[typeConfig.id] ?? {
+        metaTitle: `Free ${typeConfig.label} QR Code Generator`,
+        metaDescription: `Create a free ${typeConfig.label} QR code. No signup required. Download PNG or SVG instantly.`,
+        keywords: `${typeConfig.label.toLowerCase()} qr code generator, free ${typeConfig.label.toLowerCase()} qr code`,
+        h1: `Free ${typeConfig.label} QR Code Generator`,
+        subtitle: `Create a custom, high-quality ${typeConfig.label} QR code for free. No signup required.`,
+        useCases: [
+          "Streamline communication by removing the need to manually type data.",
+          "Bridge physical print materials with instant digital actions on mobile."
+        ],
+        howToSteps: [
+          { title: `Select ${typeConfig.label}`, desc: `Choose the '${typeConfig.label}' tab and fill in your information.` },
+          { title: "Customize", desc: "Adjust colors, dot styles, and upload a logo." },
+          { title: "Download", desc: "Save as PNG for digital or SVG for print." }
+        ],
+        faqs: [] as { q: string; a: string }[],
+        seoContent: [] as { heading: string; text: string }[]
+      })
+    : null;
 
-  const content = typeContent[typeConfig.id] ?? {
-    metaTitle: `Free ${typeConfig.label} QR Code Generator`,
-    metaDescription: `Create a free ${typeConfig.label} QR code. No signup required. Download PNG or SVG instantly.`,
-    keywords: `${typeConfig.label.toLowerCase()} qr code generator, free ${typeConfig.label.toLowerCase()} qr code`,
-    h1: `Free ${typeConfig.label} QR Code Generator`,
-    subtitle: `Create a custom, high-quality ${typeConfig.label} QR code for free. No signup required.`,
-    useCases: [
-      "Streamline communication by removing the need to manually type data.",
-      "Bridge physical print materials with instant digital actions on mobile."
-    ],
-    howToSteps: [
-      { title: `Select ${typeConfig.label}`, desc: `Choose the '${typeConfig.label}' tab and fill in your information.` },
-      { title: "Customize", desc: "Adjust colors, dot styles, and upload a logo." },
-      { title: "Download", desc: "Save as PNG for digital or SVG for print." }
-    ],
-    faqs: [],
-    seoContent: []
-  };
-
+  // Hook must be called unconditionally — use empty/fallback values when no typeConfig
   useSEO({
-    title: content.metaTitle,
-    description: content.metaDescription,
-    canonicalPath: `/qr-code-generator/${typeConfig.slug}`,
-    keywords: content.keywords,
-    jsonLd: {
+    title: content?.metaTitle ?? "Free QR Code Generator",
+    description: content?.metaDescription ?? "Create free QR codes instantly.",
+    canonicalPath: typeConfig ? `/qr-code-generator/${typeConfig.slug}` : "/",
+    keywords: content?.keywords,
+    jsonLd: typeConfig && content ? {
       "@context": "https://schema.org",
       "@graph": [
         {
@@ -390,8 +385,13 @@ export default function QRTypePage() {
           }))
         }] : [])
       ]
-    }
+    } : undefined
   });
+
+  // Conditional renders come AFTER all hooks
+  if (!match || !params?.type || !typeConfig || !content) {
+    return <NotFoundPage />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
