@@ -1,12 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
-import { qrTypes } from '@/data/qr-types';
 import { TypeSelector } from './TypeSelector';
 import { QRForm } from './QRForm';
 import { QRCustomizer } from './QRCustomizer';
 import { QRPreview } from './QRPreview';
 import { formatQRData } from '@/lib/qr-utils';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { BrandCorner } from '@/components/brand/BrandCorner';
 
 interface QRGeneratorProps {
   initialType?: string;
@@ -31,59 +29,52 @@ export function QRGenerator({ initialType }: QRGeneratorProps) {
   const [debouncedFormData, setDebouncedFormData] = useState<any>({});
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedFormData(formData);
-    }, 150);
+    const timer = setTimeout(() => setDebouncedFormData(formData), 150);
     return () => clearTimeout(timer);
   }, [formData]);
 
   useEffect(() => {
-    if (initialType && initialType !== activeType) {
-      setActiveType(initialType);
-    }
+    if (initialType && initialType !== activeType) setActiveType(initialType);
   }, [initialType]);
 
   useEffect(() => {
     setSavedType(activeType);
   }, [activeType, setSavedType]);
 
-  const qrDataString = useMemo(() => {
-    return formatQRData(activeType, debouncedFormData);
-  }, [activeType, debouncedFormData]);
-
-  const handleSettingsChange = (newSettings: any) => {
-    setSavedSettings(newSettings);
-  };
+  const qrDataString = useMemo(
+    () => formatQRData(activeType, debouncedFormData),
+    [activeType, debouncedFormData]
+  );
 
   return (
-    <div className="relative w-full max-w-6xl mx-auto bg-card rounded-2xl shadow-xl border-2 border-border overflow-hidden">
-      {/* Signature brand corners on the outer tool card */}
-      <BrandCorner size={20} opacity={0.18} className="absolute top-3 left-3 pointer-events-none z-10" />
-      <BrandCorner size={20} opacity={0.18} className="absolute top-3 right-3 pointer-events-none z-10 rotate-90" />
-      <BrandCorner size={20} opacity={0.18} className="absolute bottom-3 left-3 pointer-events-none z-10 -rotate-90" />
-      <BrandCorner size={20} opacity={0.18} className="absolute bottom-3 right-3 pointer-events-none z-10 rotate-180" />
-
+    <div className="w-full max-w-5xl mx-auto bg-card rounded-2xl border shadow-sm overflow-hidden">
       <div className="flex flex-col lg:flex-row">
-        {/* Left Column: Controls */}
-        <div className="flex-1 border-b lg:border-b-0 lg:border-r p-6 md:p-8 space-y-8">
+        {/* Left: controls */}
+        <div className="flex-1 border-b lg:border-b-0 lg:border-r p-5 md:p-7 space-y-6">
           <div>
-            <h2 className="text-xl font-semibold mb-4">1. Select Type</h2>
+            <label className="block text-sm font-semibold text-foreground mb-2">
+              QR Code Type
+            </label>
             <TypeSelector activeType={activeType} onSelect={setActiveType} />
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold mb-4">2. Enter Content</h2>
+            <label className="block text-sm font-semibold text-foreground mb-2">
+              Content
+            </label>
             <QRForm type={activeType} data={formData} onChange={setFormData} />
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold mb-4">3. Customize Design</h2>
-            <QRCustomizer settings={savedSettings} onChange={handleSettingsChange} />
+            <label className="block text-sm font-semibold text-foreground mb-2">
+              Customize Design
+            </label>
+            <QRCustomizer settings={savedSettings} onChange={setSavedSettings} />
           </div>
         </div>
 
-        {/* Right Column: Preview */}
-        <div className="w-full lg:w-[400px] xl:w-[450px] p-6 md:p-8 bg-muted/20 flex flex-col items-center sticky top-16 lg:h-[calc(100vh-4rem)] overflow-y-auto">
+        {/* Right: preview */}
+        <div className="w-full lg:w-[360px] xl:w-[400px] p-5 md:p-7 bg-muted/20 flex flex-col items-center lg:sticky lg:top-16 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto">
           <QRPreview data={qrDataString} settings={savedSettings} />
         </div>
       </div>

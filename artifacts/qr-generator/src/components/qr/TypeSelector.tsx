@@ -1,5 +1,11 @@
 import { qrTypes } from '@/data/qr-types';
-import { cn } from '@/lib/utils';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface TypeSelectorProps {
   activeType: string;
@@ -8,28 +14,21 @@ interface TypeSelectorProps {
 
 export function TypeSelector({ activeType, onSelect }: TypeSelectorProps) {
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-      {qrTypes.map((type) => {
-        const isActive = activeType === type.id;
-        const Icon = type.icon;
-        
-        return (
-          <button
-            key={type.id}
-            onClick={() => onSelect(type.id)}
-            className={cn(
-              "flex flex-col items-center justify-center gap-2 p-3 rounded-lg border text-sm transition-all duration-200",
-              isActive 
-                ? "bg-primary/10 border-primary text-primary font-medium" 
-                : "bg-card hover:bg-muted text-muted-foreground hover:text-foreground"
-            )}
-            type="button"
-          >
-            <Icon className={cn("w-5 h-5", isActive ? "text-primary" : "")} />
-            <span>{type.label}</span>
-          </button>
-        );
-      })}
-    </div>
+    <Select value={activeType} onValueChange={onSelect}>
+      <SelectTrigger className="w-full h-11" data-testid="select-qr-type">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {qrTypes.map((type) => (
+          <SelectItem key={type.id} value={type.id} data-testid={`option-qr-type-${type.id}`}>
+            <div className="flex items-center gap-2.5 py-0.5">
+              <type.icon className="w-4 h-4 text-primary shrink-0" />
+              <span className="font-medium">{type.label}</span>
+              <span className="text-muted-foreground text-xs hidden sm:inline">{type.description}</span>
+            </div>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
