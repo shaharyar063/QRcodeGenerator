@@ -178,6 +178,15 @@
   --sidebar-ring: 38 92% 50%;
 }
 
+@utility container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 100%;
+  max-width: 1280px;
+}
+
 @layer base {
   * {
     @apply border-border;

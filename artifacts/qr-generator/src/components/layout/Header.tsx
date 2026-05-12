@@ -13,7 +13,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-0">
+        <Link href="/" className="flex items-center gap-0 shrink-0">
           <Logo size={28} showWordmark={true} />
         </Link>
 
@@ -26,14 +26,14 @@ export function Header() {
               QR Types
             </span>
             <div className="absolute left-0 top-full hidden w-[400px] pt-2 group-hover:block">
-              <div className="grid grid-cols-2 gap-2 rounded-xl border bg-popover p-4 shadow-lg">
+              <div className="grid grid-cols-2 gap-1.5 rounded-xl border bg-popover p-3 shadow-lg">
                 {qrTypes.map((type) => (
                   <Link
                     key={type.id}
                     href={`/qr-code-generator/${type.slug}`}
-                    className="flex items-center gap-2 rounded-lg p-2 hover:bg-muted transition-colors"
+                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm hover:bg-muted transition-colors"
                   >
-                    <type.icon className="h-4 w-4 text-primary" />
+                    <type.icon className="h-3.5 w-3.5 text-primary shrink-0" />
                     <span>{type.label}</span>
                   </Link>
                 ))}
@@ -48,7 +48,7 @@ export function Header() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <Button asChild className="hidden md:inline-flex font-semibold shadow-sm">
             <Link href="/">Create QR Code</Link>
           </Button>
@@ -68,15 +68,15 @@ export function Header() {
                 <Link href="/" className="text-lg font-medium">Generator</Link>
                 <Link href="/blog" className="text-lg font-medium">Blog</Link>
                 <Link href="/faq" className="text-lg font-medium">FAQ</Link>
-                <div className="flex flex-col gap-2 pt-4 border-t">
-                  <span className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">QR Types</span>
+                <div className="flex flex-col gap-1.5 pt-4 border-t">
+                  <span className="font-semibold text-xs text-muted-foreground uppercase tracking-wide mb-1">QR Types</span>
                   {qrTypes.map((type) => (
                     <Link
                       key={type.id}
                       href={`/qr-code-generator/${type.slug}`}
-                      className="flex items-center gap-2 py-1.5 text-sm hover:text-primary transition-colors"
+                      className="flex items-center gap-2 py-1 text-sm hover:text-primary transition-colors"
                     >
-                      <type.icon className="h-4 w-4 text-primary" />
+                      <type.icon className="h-3.5 w-3.5 text-primary" />
                       <span>{type.label}</span>
                     </Link>
                   ))}
