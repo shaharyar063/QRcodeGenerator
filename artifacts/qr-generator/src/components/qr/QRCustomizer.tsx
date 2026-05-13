@@ -229,15 +229,16 @@ export function QRCustomizer({ settings, onChange }: QRCustomizerProps) {
           
           <div className="space-y-3">
             <div className="flex justify-between">
-              <Label>Margin ({settings.margin || 10}px)</Label>
+              <Label>Margin ({settings.margin !== undefined ? settings.margin : 10}px)</Label>
             </div>
             <Slider 
               min={0} 
               max={20} 
               step={1} 
               value={[settings.margin !== undefined ? settings.margin : 10]} 
-              onValueChange={(v) => updateSetting('', 'margin', v[0])} 
+              onValueChange={(v) => onChange({ ...settings, margin: v[0] })} 
             />
+            <p className="text-xs text-muted-foreground">White border around the QR code. Scales automatically with download resolution.</p>
           </div>
 
           <div className="space-y-2">

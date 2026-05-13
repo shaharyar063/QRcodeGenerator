@@ -29,7 +29,7 @@ export function useQRCode(options: Partial<Options>) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Update the live preview whenever options change (skip image data in comparison for speed)
+  // Update the live preview whenever options change (skip large image data in comparison)
   useEffect(() => {
     if (!qrCode) return;
     const { image: _img, ...rest } = options as any;
@@ -40,8 +40,19 @@ export function useQRCode(options: Partial<Options>) {
     }
   });
 
+  /**
+   * Download the QR code.
+   * @param extension  File format
+   * @param downloadSize  Pixel size for the exported file (creates a fresh high-res instance)
+   * @param extraOpts  Additional option overrides applied to the download instance only
+   *                   (e.g. a margin scaled to the download resolution)
+   */
   const download = useCallback(
-    (extension: 'png' | 'svg' | 'jpeg', downloadSize?: number) => {
+    (
+      extension: 'png' | 'svg' | 'jpeg',
+      downloadSize?: number,
+      extraOpts?: Partial<Options>
+    ) => {
       if (!qrCode) return;
 
       if (downloadSize) {
@@ -56,10 +67,11 @@ export function useQRCode(options: Partial<Options>) {
           ...latestOptions.current,
           width: downloadSize,
           height: downloadSize,
+          ...extraOpts,
         });
         highRes.append(container);
 
-        // Give the canvas time to render, then trigger download
+        // Give the canvas time to fully render, then trigger the browser download
         setTimeout(() => {
           const result = highRes.download({ name: 'qr-code', extension });
           const cleanup = () => {
