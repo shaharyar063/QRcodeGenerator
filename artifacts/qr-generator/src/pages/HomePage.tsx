@@ -46,7 +46,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero */}
-      <section className="pt-6 pb-12 md:pt-8 md:pb-14 px-4 bg-gradient-to-b from-amber-50/60 to-background">
+      <section className="pt-6 pb-12 md:pt-8 md:pb-14 px-4 bg-gradient-to-b from-blue-50/60 to-background">
         <div className="container mx-auto text-center mb-8 max-w-3xl">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-3">
             Free <span className="text-primary">QR Code</span> Generator

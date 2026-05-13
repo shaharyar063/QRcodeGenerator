@@ -21,7 +21,7 @@ export function BrandCorner({ size = 14, className, opacity = 0.35, style }: Bra
     >
       <rect x="0" y="0" width="40" height="40" rx="6" fill="#1E293B" />
       <rect x="5" y="5" width="30" height="30" rx="3" fill="#FFFFFF" />
-      <rect x="12" y="12" width="16" height="16" rx="3" fill="#F59E0B" />
+      <rect x="12" y="12" width="16" height="16" rx="3" fill="#2563EB" />
     </svg>
   );
 }
