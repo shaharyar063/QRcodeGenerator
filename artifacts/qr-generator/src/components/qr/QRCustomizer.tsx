@@ -219,8 +219,9 @@ export function QRCustomizer({ settings, onChange }: QRCustomizerProps) {
               step={10} 
               value={[settings.width || 280]} 
               onValueChange={(v) => {
-                updateSetting('', 'width', v[0]);
-                updateSetting('', 'height', v[0]);
+                // Single onChange call — two separate calls would clobber each other
+                // due to React batching on the stale settings closure
+                onChange({ ...settings, width: v[0], height: v[0] });
               }} 
             />
             <p className="text-xs text-muted-foreground">Controls how large the preview appears. Download quality is set separately above the download buttons.</p>
