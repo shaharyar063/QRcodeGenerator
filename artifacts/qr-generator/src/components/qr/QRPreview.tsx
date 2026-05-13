@@ -10,8 +10,8 @@ interface QRPreviewProps {
 }
 
 const MIN_SIZE = 512;
-const MAX_SIZE = 3840;
-const DEFAULT_SIZE = Math.round((MIN_SIZE + MAX_SIZE) / 2); // ~2176, rounded below
+const MAX_SIZE = 2000;
+const DEFAULT_SIZE = Math.round((MIN_SIZE + MAX_SIZE) / 2); // 1256
 
 function resolutionLabel(size: number): string {
   if (size < 800)  return 'Web';

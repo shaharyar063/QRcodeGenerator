@@ -255,9 +255,6 @@ export function QRCustomizer({ settings, onChange }: QRCustomizerProps) {
                 <SelectItem value="H">High (30%) - Most reliable</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground pt-1">
-              Higher error correction allows the QR code to be scanned even if part of it is covered (like with a logo).
-            </p>
           </div>
         </AccordionContent>
       </AccordionItem>
