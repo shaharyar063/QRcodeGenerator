@@ -52,9 +52,11 @@ export function QRGenerator({ initialType }: QRGeneratorProps) {
   const [formData, setFormData] = useState<any>({});
   const [debouncedFormData, setDebouncedFormData] = useState<any>({});
 
-  // Content open by default, Customize Design closed by default
+  // Content always open; Customize Design open on desktop (≥1024px), closed on mobile
   const [contentOpen, setContentOpen] = useState(true);
-  const [customizeOpen, setCustomizeOpen] = useState(false);
+  const [customizeOpen, setCustomizeOpen] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth >= 1024
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedFormData(formData), 150);
