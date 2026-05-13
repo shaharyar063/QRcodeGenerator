@@ -9,45 +9,38 @@ interface QRPreviewProps {
   settings: any;
 }
 
-const QUALITY_STEPS = [512, 1024, 2048, 3000];
+const MIN_SIZE = 512;
+const MAX_SIZE = 3840;
+const DEFAULT_SIZE = Math.round((MIN_SIZE + MAX_SIZE) / 2); // ~2176, rounded below
 
-const QUALITY_META = [
-  { label: 'Web',   desc: '512 px — good for screens & messaging' },
-  { label: 'HD',    desc: '1024 px — sharp for small prints' },
-  { label: 'Print', desc: '2048 px — crisp on posters & packaging' },
-  { label: 'Ultra', desc: '3000 px — billboards & large format' },
-];
+function resolutionLabel(size: number): string {
+  if (size < 800)  return 'Web';
+  if (size < 1500) return 'HD';
+  if (size < 2500) return 'Print Quality';
+  return 'Ultra High Resolution';
+}
 
-/**
- * The qr-code-styling library treats `margin` as absolute pixels on the canvas.
- * We always scale it relative to a 300 px baseline so the visual white border
- * looks consistent regardless of canvas render size or download resolution.
- */
 function scaleMargin(userMargin: number, targetSize: number) {
   return Math.round(userMargin * (targetSize / 300));
 }
 
 export function QRPreview({ data, settings }: QRPreviewProps) {
-  const [qualityIndex, setQualityIndex] = useState(1); // default = HD 1024
-  const [isLoading, setIsLoading] = useState(true);
+  const [downloadSize, setDownloadSize] = useState(DEFAULT_SIZE);
+  const [isLoading, setIsLoading]       = useState(true);
 
   // Size slider (Advanced) controls how big the preview box appears on screen
   const displaySize = Math.min(Math.max(settings.width ?? 280, 180), 360);
 
-  // Quality slider controls internal canvas pixel count (capped at 1024 for preview perf)
-  const downloadSize = QUALITY_STEPS[qualityIndex];
-  const canvasRenderSize = Math.min(downloadSize, 1024);
-
-  // Raw user margin (0-20 range set in Advanced slider)
+  // Cap internal canvas render at 1024 px for DOM performance — sharper than
+  // the raw 280 px display, but avoids a multi-MB canvas in the browser.
+  const canvasRenderSize  = Math.min(downloadSize, 1024);
   const userMargin: number = settings.margin ?? 10;
-
-  // Scale margin for the preview canvas so the white border looks consistent
   const scaledPreviewMargin = scaleMargin(userMargin, canvasRenderSize);
 
   const previewOptions = {
     ...settings,
     data,
-    width: canvasRenderSize,
+    width:  canvasRenderSize,
     height: canvasRenderSize,
     margin: scaledPreviewMargin,
   };
@@ -55,16 +48,14 @@ export function QRPreview({ data, settings }: QRPreviewProps) {
   const { ref, download } = useQRCode(previewOptions);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 150);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setIsLoading(false), 150);
+    return () => clearTimeout(t);
   }, []);
 
   const handleDownload = (ext: 'png' | 'svg' | 'jpeg') => {
     if (ext === 'svg') {
-      // SVG is vector — no size needed, but still scale margin
       download('svg', undefined, { margin: scaleMargin(userMargin, 512) });
     } else {
-      // Scale margin to match the chosen download resolution
       download(ext, downloadSize, { margin: scaleMargin(userMargin, downloadSize) });
     }
   };
@@ -77,12 +68,11 @@ export function QRPreview({ data, settings }: QRPreviewProps) {
         </h3>
       </div>
 
-      {/* Preview box — displaySize sets the visible box; canvas is canvasRenderSize internally */}
+      {/* Preview box */}
       <div
         className="relative bg-white rounded-xl border flex items-center justify-center mb-5 transition-all duration-200 overflow-hidden"
-        style={{ width: displaySize, height: displaySize, padding: 0 }}
+        style={{ width: displaySize, height: displaySize }}
       >
-        {/* Canvas is scaled down via CSS — more internal pixels = sharper dots */}
         <div
           ref={ref}
           style={{ width: '100%', height: '100%' }}
@@ -98,32 +88,25 @@ export function QRPreview({ data, settings }: QRPreviewProps) {
         )}
       </div>
 
-      {/* Download Quality slider — full width, good touch targets */}
-      <div className="w-full mb-5 space-y-3">
+      {/* Continuous download quality slider */}
+      <div className="w-full mb-5 space-y-2.5">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-foreground">Download Quality</span>
-          <span className="text-xs font-semibold text-primary">
-            {QUALITY_META[qualityIndex].label} — {downloadSize} px
-          </span>
+          <span className="text-xs font-semibold text-primary">{downloadSize} px</span>
         </div>
         <Slider
-          min={0}
-          max={QUALITY_STEPS.length - 1}
-          step={1}
-          value={[qualityIndex]}
-          onValueChange={(v) => setQualityIndex(v[0])}
+          min={MIN_SIZE}
+          max={MAX_SIZE}
+          step={8}
+          value={[downloadSize]}
+          onValueChange={(v) => setDownloadSize(v[0])}
         />
-        <div className="flex justify-between text-[11px] text-muted-foreground">
-          {QUALITY_META.map((q) => (
-            <span key={q.label}>{q.label}</span>
-          ))}
-        </div>
-        <p className="text-[11px] text-muted-foreground text-center leading-snug">
-          {QUALITY_META[qualityIndex].desc}
+        <p className="text-[11px] text-muted-foreground text-center">
+          {resolutionLabel(downloadSize)}
         </p>
       </div>
 
-      {/* Download buttons — full width */}
+      {/* Download buttons */}
       <div className="w-full flex flex-col gap-2.5">
         <Button
           size="default"
@@ -135,30 +118,14 @@ export function QRPreview({ data, settings }: QRPreviewProps) {
           Download PNG
         </Button>
         <div className="grid grid-cols-2 gap-2.5">
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            onClick={() => handleDownload('svg')}
-            data-testid="button-download-svg"
-          >
+          <Button variant="outline" size="sm" className="w-full" onClick={() => handleDownload('svg')} data-testid="button-download-svg">
             SVG
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            onClick={() => handleDownload('jpeg')}
-            data-testid="button-download-jpeg"
-          >
+          <Button variant="outline" size="sm" className="w-full" onClick={() => handleDownload('jpeg')} data-testid="button-download-jpeg">
             JPEG
           </Button>
         </div>
       </div>
-
-      <p className="mt-4 text-xs text-center text-muted-foreground">
-        Static QR codes — never expire.
-      </p>
     </div>
   );
 }

@@ -224,7 +224,6 @@ export function QRCustomizer({ settings, onChange }: QRCustomizerProps) {
                 onChange({ ...settings, width: v[0], height: v[0] });
               }} 
             />
-            <p className="text-xs text-muted-foreground">Controls how large the preview appears. Download quality is set separately above the download buttons.</p>
           </div>
           
           <div className="space-y-3">
@@ -238,7 +237,6 @@ export function QRCustomizer({ settings, onChange }: QRCustomizerProps) {
               value={[settings.margin !== undefined ? settings.margin : 10]} 
               onValueChange={(v) => onChange({ ...settings, margin: v[0] })} 
             />
-            <p className="text-xs text-muted-foreground">White border around the QR code. Scales automatically with download resolution.</p>
           </div>
 
           <div className="space-y-2">
