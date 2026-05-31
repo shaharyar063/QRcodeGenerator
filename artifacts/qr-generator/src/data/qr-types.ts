@@ -1,5 +1,8 @@
 import { Link, Wifi, Mail, Phone, MessageSquare, Contact, MessageCircle, FileText, MapPin, Calendar } from 'lucide-react';
 
+/** Top 3 QR types shown directly in the header nav */
+export const primaryNavQrTypeIds = ["url", "wifi", "vcard"] as const;
+
 export const qrTypes = [
   {
     id: "url",

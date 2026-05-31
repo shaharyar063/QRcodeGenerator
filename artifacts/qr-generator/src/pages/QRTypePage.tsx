@@ -6,6 +6,7 @@ import { Link } from "wouter";
 import { ChevronRight, CheckCircle2, Download, Paintbrush, ShieldCheck, Zap } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import NotFoundPage from "./not-found";
+import { SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 
 const typeContent: Record<string, {
   metaTitle: string;
@@ -355,6 +356,7 @@ export default function QRTypePage() {
     title: content?.metaTitle ?? "Free QR Code Generator",
     description: content?.metaDescription ?? "Create free QR codes instantly.",
     canonicalPath: typeConfig ? `/qr-code-generator/${typeConfig.slug}` : "/",
+    ogImage: typeConfig ? `og-qr-${typeConfig.slug}` : undefined,
     keywords: content?.keywords,
     jsonLd: typeConfig && content ? {
       "@context": "https://schema.org",
@@ -362,7 +364,7 @@ export default function QRTypePage() {
         {
           "@type": "WebApplication",
           "name": `Free ${typeConfig.label} QR Code Generator`,
-          "url": `https://qrcodegenerator.app/qr-code-generator/${typeConfig.slug}`,
+          "url": `${SITE_ORIGIN}/qr-code-generator/${typeConfig.slug}`,
           "description": content.metaDescription,
           "applicationCategory": "UtilitiesApplication",
           "operatingSystem": "All",
@@ -371,8 +373,8 @@ export default function QRTypePage() {
         {
           "@type": "BreadcrumbList",
           "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://qrcodegenerator.app" },
-            { "@type": "ListItem", "position": 2, "name": "QR Code Generator", "item": "https://qrcodegenerator.app" },
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_ORIGIN },
+            { "@type": "ListItem", "position": 2, "name": SITE_NAME, "item": SITE_ORIGIN },
             { "@type": "ListItem", "position": 3, "name": `${typeConfig.label} QR Code` }
           ]
         },
@@ -425,7 +427,7 @@ export default function QRTypePage() {
               { icon: Paintbrush, label: "Fully Custom" }
             ].map(({ icon: Icon, label }) => (
               <span key={label} className="flex items-center gap-1.5 bg-card border px-3 py-1 rounded-full">
-                <Icon className="w-3.5 h-3.5 text-primary" />
+                <Icon className="w-3.5 h-3.5" />
                 {label}
               </span>
             ))}
@@ -446,7 +448,7 @@ export default function QRTypePage() {
               <ol className="space-y-4">
                 {content.howToSteps.map((step, i) => (
                   <li key={i} className="flex gap-4">
-                    <div className="w-7 h-7 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                    <div className="w-7 h-7 bg-foreground text-background rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">
                       {i + 1}
                     </div>
                     <div>
@@ -463,7 +465,7 @@ export default function QRTypePage() {
               <ul className="space-y-3">
                 {content.useCases.map((uc, i) => (
                   <li key={i} className="flex gap-3">
-                    <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-foreground mt-0.5 flex-shrink-0" />
                     <p className="text-sm text-muted-foreground">{uc}</p>
                   </li>
                 ))}
@@ -516,7 +518,7 @@ export default function QRTypePage() {
               <Link 
                 key={type.id} 
                 href={`/qr-code-generator/${type.slug}`}
-                className="px-4 py-2 bg-card border rounded-full text-sm font-medium hover:border-primary hover:text-primary transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-card border rounded-full text-sm font-medium hover:border-foreground hover:bg-muted transition-colors flex items-center gap-2"
               >
                 <type.icon className="w-4 h-4" />
                 {type.label} QR Code

@@ -1,9 +1,11 @@
+import { SITE_ORIGIN } from "@/lib/site";
+
 export function formatQRData(type: string, values: any): string {
-  if (!values) return "https://qrcodegenerator.app";
+  if (!values) return SITE_ORIGIN;
 
   switch (type) {
     case 'url':
-      return values.url || "https://qrcodegenerator.app";
+      return values.url || SITE_ORIGIN;
       
     case 'wifi':
       const ssid = values.ssid || "";
@@ -62,6 +64,6 @@ DESCRIPTION:${values.description || ""}
 END:VEVENT`;
       
     default:
-      return "https://qrcodegenerator.app";
+      return SITE_ORIGIN;
   }
 }

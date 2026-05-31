@@ -4,23 +4,25 @@ import { Link } from "wouter";
 import { ShieldCheck, Zap, Download, Paintbrush, Users, Globe, Lock } from "lucide-react";
 import { qrTypes } from "@/data/qr-types";
 import { faqData } from "@/data/faq";
+import { HowToCreateSection } from "@/components/home/HowToCreateSection";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useSEO } from "@/hooks/useSEO";
-import { LogoMark } from "@/components/brand/Logo";
+import { SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 
 export default function HomePage() {
   useSEO({
-    title: "Free QR Code Generator — Create QR Codes Instantly, No Signup",
+    title: `Free ${SITE_NAME} — Create QR Codes Instantly, No Signup`,
     description: "Create free, custom QR codes for URLs, WiFi, vCards, WhatsApp, email & more. No signup required. Download high-quality PNG, SVG or JPEG. Codes never expire.",
     canonicalPath: "/",
+    ogImage: "og-home",
     keywords: "qr code generator, free qr code generator, qr code maker, create qr code, qr code generator free, custom qr code, qr code no signup",
     jsonLd: {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "WebApplication",
-          "name": "Free QR Code Generator",
-          "url": "https://qrcodegenerator.app",
+          "name": SITE_NAME,
+          "url": SITE_ORIGIN,
           "description": "Create free QR codes for URLs, WiFi, vCards, WhatsApp, email, SMS, phone, location and events. No signup, no watermark, codes never expire.",
           "applicationCategory": "UtilitiesApplication",
           "operatingSystem": "All",
@@ -46,10 +48,13 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero */}
-      <section className="pt-6 pb-12 md:pt-8 md:pb-14 px-4 bg-gradient-to-b from-blue-50/60 to-background">
+      <section
+        id="create-qr"
+        className="pt-8 pb-12 md:pt-10 md:pb-14 px-4 scroll-mt-4 bg-gradient-to-b from-muted/50 via-background to-background"
+      >
         <div className="container mx-auto text-center mb-8 max-w-3xl">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-3">
-            Free <span className="text-primary">QR Code</span> Generator
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
+            Free QR Code Generator
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-snug sm:leading-relaxed">
             Create custom QR codes for URLs, WiFi, vCards, WhatsApp, email and more.
@@ -73,7 +78,7 @@ export default function HomePage() {
               { icon: Paintbrush, label: "Fully Customizable", sub: "Colors, logos & styles" },
             ].map(({ icon: Icon, label, sub }) => (
               <div key={label} className="flex flex-col items-center gap-1.5">
-                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center text-foreground">
                   <Icon className="w-5 h-5" />
                 </div>
                 <h3 className="font-semibold text-sm">{label}</h3>
@@ -97,10 +102,10 @@ export default function HomePage() {
               <Link
                 key={type.id}
                 href={`/qr-code-generator/${type.slug}`}
-                className="group flex flex-col items-center p-4 text-center rounded-xl border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all duration-150"
+                className="group flex flex-col items-center p-4 text-center rounded-lg border bg-card hover:border-foreground/20 hover:bg-muted/50 transition-all duration-150"
                 data-testid={`link-qr-type-${type.id}`}
               >
-                <div className="w-9 h-9 bg-muted rounded-lg flex items-center justify-center mb-2.5 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                <div className="w-9 h-9 bg-muted rounded-lg flex items-center justify-center mb-2.5 group-hover:bg-foreground group-hover:text-background transition-colors">
                   <type.icon className="w-5 h-5" />
                 </div>
                 <h3 className="font-semibold text-sm mb-0.5">{type.label} QR Code</h3>
@@ -111,31 +116,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-14 bg-muted/30 border-y">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold mb-2">How to Create a QR Code</h2>
-            <p className="text-sm text-muted-foreground">Three steps. Under 60 seconds. Completely free.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-5">
-            {[
-              { n: 1, title: "Choose Your Type", desc: "Select what your QR code should do — link to a URL, share WiFi, save contact info, open WhatsApp, and more." },
-              { n: 2, title: "Customize the Design", desc: "Change colors, pick a dot style, and add your brand logo. The preview updates live as you make changes." },
-              { n: 3, title: "Download & Use", desc: "Save as high-res PNG for digital use or crisp SVG for professional print. No signup, no watermark, no expiry." },
-            ].map(({ n, title, desc }) => (
-              <div key={n} className="flex flex-col items-center text-center bg-background p-6 rounded-xl border">
-                <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mb-4 shadow-sm">
-                  {n}
-                </div>
-                <h3 className="font-semibold mb-1.5">{title}</h3>
-                <p className="text-sm text-muted-foreground leading-snug">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HowToCreateSection />
 
       {/* Why Us — SEO content block targeting competitor weaknesses */}
       <section className="py-14 bg-background">
@@ -179,7 +160,7 @@ export default function HomePage() {
               }
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="flex gap-4 p-5 rounded-xl border bg-card">
-                <div className="w-9 h-9 bg-primary/10 rounded-lg flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
+                <div className="w-9 h-9 bg-muted rounded-lg flex items-center justify-center text-foreground flex-shrink-0 mt-0.5">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
@@ -237,28 +218,6 @@ export default function HomePage() {
               <Link href="/faq">View All FAQs</Link>
             </Button>
           </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-16 bg-primary text-primary-foreground text-center">
-        <div className="container mx-auto px-4 max-w-xl">
-          <div className="flex justify-center mb-4">
-            <LogoMark size={44} />
-          </div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-3">Ready to create your free QR code?</h2>
-          <p className="text-sm opacity-85 mb-6">
-            No signup. No credit card. No watermark. No expiry.
-          </p>
-          <Button
-            size="lg"
-            variant="secondary"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="font-semibold px-8"
-            data-testid="button-cta-scroll-top"
-          >
-            Start Generating for Free
-          </Button>
         </div>
       </section>
     </div>

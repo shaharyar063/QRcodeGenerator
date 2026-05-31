@@ -4,12 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, MessageSquare } from "lucide-react";
+import { SITE_EMAIL, SITE_NAME } from "@/lib/site";
 
 export default function ContactPage() {
   useSEO({
-    title: "Contact | QR Generator — Free QR Code Generator Support",
+    title: `Contact | ${SITE_NAME} — Free QR Code Generator Support`,
     description: "Questions about our free QR code generator? Send us a message. We typically respond within 24 hours.",
-    canonicalPath: "/contact"
+    canonicalPath: "/contact",
+    ogImage: "og-contact",
   });
 
   return (
@@ -37,17 +39,17 @@ export default function ContactPage() {
 
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary flex-shrink-0">
+                  <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center text-foreground flex-shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
                     <h3 className="font-medium">Email Support</h3>
-                    <p className="text-muted-foreground text-sm">hello@qrcodegenerator.app</p>
+                    <p className="text-muted-foreground text-sm">{SITE_EMAIL}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary flex-shrink-0">
+                  <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center text-foreground flex-shrink-0">
                     <MessageSquare className="w-5 h-5" />
                   </div>
                   <div>

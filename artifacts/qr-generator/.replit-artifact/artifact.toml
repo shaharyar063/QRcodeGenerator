@@ -19,7 +19,7 @@ run = "pnpm --filter @workspace/qr-generator run dev"
 
 [services.production]
 build = [ "pnpm", "--filter", "@workspace/qr-generator", "run", "build" ]
-publicDir = "artifacts/qr-generator/dist/public"
+publicDir = "artifacts/qr-generator/dist"
 serve = "static"
 
 [[services.production.rewrites]]

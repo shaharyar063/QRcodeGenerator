@@ -1,62 +1,43 @@
-import { useState, useEffect, useMemo } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { TypeSelector } from './TypeSelector';
-import { QRForm } from './QRForm';
-import { QRCustomizer } from './QRCustomizer';
-import { QRPreview } from './QRPreview';
-import { formatQRData } from '@/lib/qr-utils';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { TypeSelector } from "./TypeSelector";
+import { QRForm } from "./QRForm";
+import { QRCustomizer } from "./QRCustomizer";
+import { QRPreview } from "./QRPreview";
+import { QRCodeDisplay } from "./QRCodeDisplay";
+import { formatQRData } from "@/lib/qr-utils";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import {
+  DEFAULT_QR_SETTINGS,
+  type QRSettings,
+} from "@/data/qr-design-presets";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 interface QRGeneratorProps {
   initialType?: string;
+  variant?: "default" | "hero";
 }
 
-function SectionHeader({
-  title,
-  open,
-  onToggle,
-}: {
-  title: string;
-  open: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      className="w-full flex items-center justify-between text-sm font-semibold text-foreground mb-2 group"
-    >
-      <span>{title}</span>
-      <ChevronDown
-        className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
-      />
-    </button>
+const DEFAULT_DOWNLOAD_SIZE = 1024;
+
+export function QRGenerator({ initialType, variant = "hero" }: QRGeneratorProps) {
+  const [savedType, setSavedType] = useLocalStorage("qr-last-type", "url");
+  const [savedSettings, setSavedSettings] = useLocalStorage<QRSettings>(
+    "qr-settings",
+    DEFAULT_QR_SETTINGS,
   );
-}
-
-export function QRGenerator({ initialType }: QRGeneratorProps) {
-  const [savedType, setSavedType] = useLocalStorage('qr-last-type', 'url');
-  const [savedSettings, setSavedSettings] = useLocalStorage('qr-settings', {
-    dotsOptions: { color: "#000000", type: "rounded" },
-    backgroundOptions: { color: "#ffffff" },
-    cornersSquareOptions: { type: "extra-rounded", color: "#000000" },
-    cornersDotOptions: { type: "dot", color: "#000000" },
-    imageOptions: { margin: 10, imageSize: 0.4 },
-    qrOptions: { errorCorrectionLevel: 'Q' },
-    width: 256,
-    height: 256,
-    margin: 10
-  });
+  const [downloadSize, setDownloadSize] = useState(DEFAULT_DOWNLOAD_SIZE);
+  const [customizeOpen, setCustomizeOpen] = useState(false);
 
   const [activeType, setActiveType] = useState(initialType || savedType);
-  const [formData, setFormData] = useState<any>({});
-  const [debouncedFormData, setDebouncedFormData] = useState<any>({});
+  const [formData, setFormData] = useState<Record<string, unknown>>({});
+  const [debouncedFormData, setDebouncedFormData] = useState<Record<string, unknown>>({});
 
-  // Content always open; Customize Design open on desktop (≥1024px), closed on mobile
-  const [contentOpen, setContentOpen] = useState(true);
-  const [customizeOpen, setCustomizeOpen] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth >= 1024
-  );
+  const isHero = variant === "hero";
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedFormData(formData), 150);
@@ -65,7 +46,7 @@ export function QRGenerator({ initialType }: QRGeneratorProps) {
 
   useEffect(() => {
     if (initialType && initialType !== activeType) setActiveType(initialType);
-  }, [initialType]);
+  }, [initialType, activeType]);
 
   useEffect(() => {
     setSavedType(activeType);
@@ -73,56 +54,109 @@ export function QRGenerator({ initialType }: QRGeneratorProps) {
 
   const qrDataString = useMemo(
     () => formatQRData(activeType, debouncedFormData),
-    [activeType, debouncedFormData]
+    [activeType, debouncedFormData],
   );
+
+  const handleSettingsChange = useCallback(
+    (next: QRSettings) => {
+      setSavedSettings(next);
+    },
+    [setSavedSettings],
+  );
+
+  const customizeSheet = (
+    <Sheet open={customizeOpen} onOpenChange={setCustomizeOpen}>
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-3xl lg:max-w-4xl overflow-y-auto p-0 sm:p-6"
+      >
+        <SheetHeader className="px-4 pt-6 sm:px-0 sm:pt-0">
+          <SheetTitle>Customize design</SheetTitle>
+        </SheetHeader>
+
+        <div className="customize_modal_body flex flex-col sm:flex-row gap-0 sm:gap-6 mt-4 pb-8">
+          <div className="customize_options flex-1 min-w-0 px-4 sm:px-0 order-2 sm:order-1">
+            <QRCustomizer
+              settings={savedSettings}
+              onChange={handleSettingsChange}
+              variant="panel"
+            />
+          </div>
+
+          <div className="customize_preview shrink-0 flex flex-col items-center px-4 py-5 sm:py-0 sm:px-5 sm:border-l border-border/80 bg-muted/20 sm:bg-transparent order-1 sm:order-2 sm:w-[240px]">
+            <p className="text-xs font-medium text-muted-foreground mb-3 self-start sm:self-center">
+              Preview
+            </p>
+            <div
+              id="generated-qr-code-img-customize"
+              className="preview_wrapper_customize flex items-center justify-center w-full"
+            >
+              <QRCodeDisplay
+                data={qrDataString}
+                settings={savedSettings}
+                size={200}
+                className="mx-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+
+  if (isHero) {
+    return (
+      <>
+        <div className="widget_container w-full max-w-4xl mx-auto bg-card rounded-2xl border border-border/80 shadow-lg overflow-hidden">
+          <TypeSelector activeType={activeType} onSelect={setActiveType} variant="hero" />
+
+          <div className="flex flex-col-reverse lg:flex-row lg:items-stretch">
+            <div className="flex-1 min-w-0 p-4 sm:p-5 lg:p-6">
+              <QRForm
+                type={activeType}
+                data={formData}
+                onChange={setFormData}
+                variant="hero"
+              />
+            </div>
+
+            <div className="w-full lg:w-[min(100%,320px)] xl:w-[340px] shrink-0 p-4 sm:p-5 lg:p-6 bg-muted/30 border-b lg:border-b-0 lg:border-l border-border/80 flex flex-col items-center justify-center">
+              <QRPreview
+                data={qrDataString}
+                settings={savedSettings}
+                variant="hero"
+                downloadSize={downloadSize}
+                onDownloadSizeChange={setDownloadSize}
+                onCustomize={() => setCustomizeOpen(true)}
+              />
+            </div>
+          </div>
+        </div>
+        {customizeSheet}
+      </>
+    );
+  }
 
   return (
     <div className="w-full max-w-5xl mx-auto bg-card rounded-2xl border shadow-sm overflow-hidden">
       <div className="flex flex-col lg:flex-row">
-        {/* Left: controls */}
         <div className="flex-1 border-b lg:border-b-0 lg:border-r p-5 md:p-7 space-y-5">
-
-          {/* QR Type — always visible, no toggle */}
           <div>
             <label className="block text-sm font-semibold text-foreground mb-2">
               QR Code Type
             </label>
             <TypeSelector activeType={activeType} onSelect={setActiveType} />
           </div>
-
-          {/* Content — collapsible, open by default */}
-          <div>
-            <SectionHeader
-              title="Content"
-              open={contentOpen}
-              onToggle={() => setContentOpen((v) => !v)}
-            />
-            {contentOpen && (
-              <div className="mt-1">
-                <QRForm type={activeType} data={formData} onChange={setFormData} />
-              </div>
-            )}
-          </div>
-
-          {/* Customize Design — collapsible, closed by default */}
-          <div>
-            <SectionHeader
-              title="Customize Design"
-              open={customizeOpen}
-              onToggle={() => setCustomizeOpen((v) => !v)}
-            />
-            {customizeOpen && (
-              <div className="mt-1">
-                <QRCustomizer settings={savedSettings} onChange={setSavedSettings} />
-              </div>
-            )}
-          </div>
-
+          <QRForm type={activeType} data={formData} onChange={setFormData} />
+          <QRCustomizer settings={savedSettings} onChange={handleSettingsChange} />
         </div>
-
-        {/* Right: preview */}
-        <div className="w-full lg:w-[360px] xl:w-[400px] p-5 md:p-7 bg-muted/20 flex flex-col items-center lg:sticky lg:top-16 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto">
-          <QRPreview data={qrDataString} settings={savedSettings} />
+        <div className="w-full lg:w-[360px] xl:w-[400px] p-5 md:p-7 bg-muted/20 flex flex-col items-center">
+          <QRPreview
+            data={qrDataString}
+            settings={savedSettings}
+            downloadSize={downloadSize}
+            onDownloadSizeChange={setDownloadSize}
+          />
         </div>
       </div>
     </div>

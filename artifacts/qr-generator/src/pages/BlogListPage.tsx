@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { blogPosts } from "@/data/blog-posts";
 import { useSEO } from "@/hooks/useSEO";
+import { SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 import { Calendar, User, ArrowRight } from "lucide-react";
 
 export default function BlogListPage() {
@@ -8,17 +9,18 @@ export default function BlogListPage() {
     title: "QR Code Blog — How to Scan, Create & Use QR Codes in 2025",
     description: "Guides, tutorials, and tips on QR codes: how to scan on iPhone and Android, create WiFi QR codes, static vs dynamic, business card QR codes, and more.",
     canonicalPath: "/blog",
+    ogImage: "og-blog",
     keywords: "how to scan qr code, how to make a qr code, qr code blog, qr code guide, qr code tips, wifi qr code, qr code business card",
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Blog",
-      "name": "QR Code Generator Blog",
-      "url": "https://qrcodegenerator.app/blog",
+      "name": `${SITE_NAME} Blog`,
+      "url": `${SITE_ORIGIN}/blog`,
       "description": "Guides, tutorials, and tips on creating and using QR codes for business, marketing, and personal projects.",
       "blogPost": blogPosts.map(post => ({
         "@type": "BlogPosting",
         "headline": post.title,
-        "url": `https://qrcodegenerator.app/blog/${post.slug}`,
+        "url": `${SITE_ORIGIN}/blog/${post.slug}`,
         "datePublished": post.date,
         "description": post.excerpt,
         "author": {
@@ -52,11 +54,11 @@ export default function BlogListPage() {
           {featuredPost && (
             <article className="mb-12 group">
               <Link href={`/blog/${featuredPost.slug}`}>
-                <div className="p-8 bg-card border rounded-2xl hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
-                  <div className="flex items-center gap-2 text-xs text-primary font-semibold mb-3">
-                    <span className="bg-primary/10 px-2.5 py-1 rounded-full">Latest Article</span>
+                <div className="p-8 bg-card border rounded-2xl hover:border-foreground/20 hover:shadow-md transition-all cursor-pointer">
+                  <div className="flex items-center gap-2 text-xs text-foreground font-medium mb-3">
+                    <span className="bg-muted px-2.5 py-1 rounded-full">Latest Article</span>
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-bold group-hover:text-primary transition-colors mb-3">
+                  <h2 className="text-2xl md:text-3xl font-bold group-hover:text-foreground transition-colors mb-3">
                     {featuredPost.title}
                   </h2>
                   <p className="text-muted-foreground mb-4 leading-relaxed">{featuredPost.excerpt}</p>
@@ -71,7 +73,7 @@ export default function BlogListPage() {
                         {featuredPost.author}
                       </span>
                     </div>
-                    <span className="flex items-center gap-1 text-sm font-medium text-primary">
+                    <span className="flex items-center gap-1 text-sm font-medium text-foreground">
                       Read article <ArrowRight className="w-4 h-4" />
                     </span>
                   </div>
@@ -83,7 +85,7 @@ export default function BlogListPage() {
           {/* Rest of posts */}
           <div className="grid md:grid-cols-2 gap-8">
             {restPosts.map((post) => (
-              <article key={post.slug} className="group relative flex flex-col items-start justify-between p-6 bg-card border rounded-2xl hover:border-primary/50 hover:shadow-md transition-all">
+              <article key={post.slug} className="group relative flex flex-col items-start justify-between p-6 bg-card border rounded-2xl hover:border-foreground/20 hover:shadow-md transition-all">
                 <div className="flex items-center gap-x-3 text-xs mb-4 text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
@@ -95,7 +97,7 @@ export default function BlogListPage() {
                   </span>
                 </div>
                 <div className="group relative flex-1">
-                  <h3 className="text-lg font-bold group-hover:text-primary transition-colors mb-3">
+                  <h3 className="text-lg font-bold group-hover:text-foreground transition-colors mb-3">
                     <Link href={`/blog/${post.slug}`}>
                       <span className="absolute inset-0" />
                       {post.title}
@@ -105,7 +107,7 @@ export default function BlogListPage() {
                     {post.excerpt}
                   </p>
                 </div>
-                <div className="mt-4 flex items-center gap-1 text-xs font-medium text-primary">
+                <div className="mt-4 flex items-center gap-1 text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
                   Read more <ArrowRight className="w-3.5 h-3.5" />
                 </div>
               </article>

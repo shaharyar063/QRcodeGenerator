@@ -11,6 +11,7 @@ export function useQRCode(options: Partial<Options>) {
 
   // Serialize options to detect real changes and avoid update loops
   const prevSerialized = useRef('');
+  const prevImage = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     const qr = new QRCodeStyling({
@@ -29,12 +30,17 @@ export function useQRCode(options: Partial<Options>) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Update the live preview whenever options change (skip large image data in comparison)
+  // Update the live preview whenever options change.
+  // Image is tracked separately because it is excluded from JSON serialization (large data URLs).
   useEffect(() => {
     if (!qrCode) return;
-    const { image: _img, ...rest } = options as any;
+    const { image, ...rest } = options as Partial<Options> & { image?: string };
     const serialized = JSON.stringify(rest);
-    if (serialized !== prevSerialized.current) {
+    const imageChanged = image !== prevImage.current;
+    const restChanged = serialized !== prevSerialized.current;
+
+    if (imageChanged || restChanged) {
+      prevImage.current = image;
       prevSerialized.current = serialized;
       qrCode.update(options);
     }

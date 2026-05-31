@@ -1,22 +1,22 @@
 {
-  "name": "QR Generator — Free QR Code Creator",
-  "short_name": "QR Generator",
-  "description": "Create custom QR codes for free. No signup required.",
+  "name": "QR Code Generator — Free QR Code Creator",
+  "short_name": "QR Code Generator",
+  "description": "Create custom QR codes for free at frreeqr-code-generator.com. No signup required.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#F59E0B",
+  "theme_color": "#171717",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/apple-touch-icon.svg",
+      "src": "/apple-touch-icon.png",
       "sizes": "180x180",
-      "type": "image/svg+xml"
+      "type": "image/png"
     }
   ]
 }

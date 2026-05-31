@@ -1,57 +1,92 @@
 import { Link } from "wouter";
-import { Menu } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { qrTypes } from "@/data/qr-types";
-import { Logo } from "@/components/brand/Logo";
+import { primaryNavQrTypeIds, qrTypes } from "@/data/qr-types";
+import { BrandLockup } from "@/components/brand/BrandLockup";
+import { SITE_NAME } from "@/lib/site";
+
+const navLinkClass =
+  "text-[15px] font-medium text-muted-foreground transition-colors hover:text-foreground";
+
+const primaryNavTypes = qrTypes.filter((type) =>
+  (primaryNavQrTypeIds as readonly string[]).includes(type.id)
+);
+
+const moreNavTypes = qrTypes.filter(
+  (type) => !(primaryNavQrTypeIds as readonly string[]).includes(type.id)
+);
+
+function QrTypeNavLink({
+  type,
+  className,
+}: {
+  type: (typeof qrTypes)[number];
+  className?: string;
+}) {
+  return (
+    <Link
+      href={`/qr-code-generator/${type.slug}`}
+      className={className ?? navLinkClass}
+    >
+      {type.label} QR Code
+    </Link>
+  );
+}
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-0 shrink-0">
-          <Logo size={28} showWordmark={true} />
+    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-[72px] items-center justify-between gap-4">
+        <Link
+          href="/"
+          className="flex items-center shrink-0 min-w-0 max-w-[min(100%,280px)] sm:max-w-none"
+          aria-label={`${SITE_NAME} home`}
+        >
+          <BrandLockup logoSize={44} />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link href="/" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            Generator
-          </Link>
-          <div className="relative group">
-            <span className="cursor-pointer transition-colors hover:text-foreground/80 text-foreground/60">
-              QR Types
-            </span>
-            <div className="absolute left-0 top-full hidden w-[400px] pt-2 group-hover:block">
-              <div className="grid grid-cols-2 gap-1.5 rounded-xl border bg-popover p-3 shadow-lg">
-                {qrTypes.map((type) => (
-                  <Link
-                    key={type.id}
-                    href={`/qr-code-generator/${type.slug}`}
-                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm hover:bg-muted transition-colors"
-                  >
-                    <type.icon className="h-3.5 w-3.5 text-primary shrink-0" />
-                    <span>{type.label}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-          <Link href="/blog" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            Blog
-          </Link>
-          <Link href="/faq" className="transition-colors hover:text-foreground/80 text-foreground/60">
-            FAQ
-          </Link>
-        </nav>
+        <div className="flex items-center gap-6 md:gap-10 shrink-0">
+          <nav className="hidden md:flex items-center gap-8">
+            {primaryNavTypes.map((type) => (
+              <QrTypeNavLink key={type.id} type={type} />
+            ))}
 
-        <div className="flex items-center gap-2 shrink-0">
-          <Button asChild className="hidden md:inline-flex font-semibold shadow-sm">
-            <Link href="/">Create QR Code</Link>
-          </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={`${navLinkClass} inline-flex items-center gap-1 outline-none`}
+                >
+                  More
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-52">
+                {moreNavTypes.map((type) => (
+                  <DropdownMenuItem key={type.id} asChild>
+                    <Link
+                      href={`/qr-code-generator/${type.slug}`}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <type.icon className="h-4 w-4 shrink-0" />
+                      <span>{type.label} QR Code</span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </nav>
 
           <Sheet>
             <SheetTrigger asChild>
@@ -62,22 +97,30 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="flex flex-col gap-4">
               <div className="pt-2 pb-4">
-                <Logo size={26} showWordmark={true} />
+                <BrandLockup logoSize={44} />
               </div>
               <div className="flex flex-col gap-4">
-                <Link href="/" className="text-lg font-medium">Generator</Link>
-                <Link href="/blog" className="text-lg font-medium">Blog</Link>
-                <Link href="/faq" className="text-lg font-medium">FAQ</Link>
+                {primaryNavTypes.map((type) => (
+                  <Link
+                    key={type.id}
+                    href={`/qr-code-generator/${type.slug}`}
+                    className="text-lg font-medium"
+                  >
+                    {type.label} QR Code
+                  </Link>
+                ))}
                 <div className="flex flex-col gap-1.5 pt-4 border-t">
-                  <span className="font-semibold text-xs text-muted-foreground uppercase tracking-wide mb-1">QR Types</span>
-                  {qrTypes.map((type) => (
+                  <span className="font-semibold text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                    More QR Types
+                  </span>
+                  {moreNavTypes.map((type) => (
                     <Link
                       key={type.id}
                       href={`/qr-code-generator/${type.slug}`}
-                      className="flex items-center gap-2 py-1 text-sm hover:text-primary transition-colors"
+                      className="flex items-center gap-2 py-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      <type.icon className="h-3.5 w-3.5 text-primary" />
-                      <span>{type.label}</span>
+                      <type.icon className="h-4 w-4" />
+                      <span>{type.label} QR Code</span>
                     </Link>
                   ))}
                 </div>

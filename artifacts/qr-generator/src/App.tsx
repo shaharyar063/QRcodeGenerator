@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -6,11 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
-// Eager load critical pages
 import HomePage from "@/pages/HomePage";
 import NotFound from "@/pages/not-found";
+import IllustrationsPage from "@/pages/IllustrationsPage";
 
-// Lazy load other pages
 const QRTypePage = lazy(() => import("@/pages/QRTypePage"));
 const BlogListPage = lazy(() => import("@/pages/BlogListPage"));
 const BlogPostPage = lazy(() => import("@/pages/BlogPostPage"));
@@ -29,7 +28,7 @@ function PageLoader() {
   );
 }
 
-function Router() {
+function SiteRoutes() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
@@ -47,18 +46,31 @@ function Router() {
   );
 }
 
+function AppShell() {
+  const [location] = useLocation();
+  const isIllustrationsDev = location === "/dev/illustrations";
+
+  if (isIllustrationsDev) {
+    return <IllustrationsPage />;
+  }
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <main className="flex-1">
+        <SiteRoutes />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-1">
-              <Router />
-            </main>
-            <Footer />
-          </div>
+          <AppShell />
         </WouterRouter>
         <Toaster />
       </TooltipProvider>

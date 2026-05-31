@@ -1,4 +1,12 @@
 import { useEffect } from 'react';
+import {
+  DEFAULT_OG_IMAGE,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+  ogImageUrl,
+  SITE_ORIGIN,
+} from '@/lib/og-images';
+import { SITE_NAME } from '@/lib/site';
 
 interface SEOProps {
   title: string;
@@ -6,9 +14,11 @@ interface SEOProps {
   canonicalPath?: string;
   jsonLd?: object;
   keywords?: string;
+  /** OG image filename without extension, e.g. "og-home" */
+  ogImage?: string;
 }
 
-export function useSEO({ title, description, canonicalPath, jsonLd, keywords }: SEOProps) {
+export function useSEO({ title, description, canonicalPath, jsonLd, keywords, ogImage }: SEOProps) {
   useEffect(() => {
     document.title = title;
 
@@ -26,7 +36,9 @@ export function useSEO({ title, description, canonicalPath, jsonLd, keywords }: 
     setMeta('meta[name="description"]', 'content', description);
     if (keywords) setMeta('meta[name="keywords"]', 'content', keywords);
 
-    const canonicalUrl = canonicalPath ? `https://qrcodegenerator.app${canonicalPath}` : 'https://qrcodegenerator.app/';
+    const canonicalUrl = canonicalPath ? `${SITE_ORIGIN}${canonicalPath}` : `${SITE_ORIGIN}/`;
+    const imageFilename = ogImage ?? DEFAULT_OG_IMAGE;
+    const imageUrl = ogImageUrl(imageFilename);
 
     let linkCanonical = document.querySelector('link[rel="canonical"]');
     if (!linkCanonical) {
@@ -41,8 +53,12 @@ export function useSEO({ title, description, canonicalPath, jsonLd, keywords }: 
       { property: 'og:description', content: description },
       { property: 'og:type', content: 'website' },
       { property: 'og:url', content: canonicalUrl },
-      { property: 'og:site_name', content: 'QR Generator' },
+      { property: 'og:site_name', content: SITE_NAME },
       { property: 'og:locale', content: 'en_US' },
+      { property: 'og:image', content: imageUrl },
+      { property: 'og:image:width', content: String(OG_IMAGE_WIDTH) },
+      { property: 'og:image:height', content: String(OG_IMAGE_HEIGHT) },
+      { property: 'og:image:alt', content: title },
     ];
 
     ogTags.forEach(({ property, content }) => {
@@ -54,8 +70,9 @@ export function useSEO({ title, description, canonicalPath, jsonLd, keywords }: 
       { name: 'twitter:title', content: title },
       { name: 'twitter:description', content: description },
       { name: 'twitter:site', content: '@qrgenerator' },
+      { name: 'twitter:image', content: imageUrl },
+      { name: 'twitter:image:alt', content: title },
     ];
-
     twitterTags.forEach(({ name, content }) => {
       setMeta(`meta[name="${name}"]`, 'content', content);
     });
@@ -75,5 +92,5 @@ export function useSEO({ title, description, canonicalPath, jsonLd, keywords }: 
       const scripts = document.querySelectorAll('script[type="application/ld+json"][data-page]');
       scripts.forEach(s => s.remove());
     };
-  }, [title, description, canonicalPath, jsonLd, keywords]);
+  }, [title, description, canonicalPath, jsonLd, keywords, ogImage]);
 }

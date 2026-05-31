@@ -9,6 +9,7 @@ export default function FaqPage() {
     title: "QR Code FAQ — Do QR Codes Expire? Are They Safe? How to Scan?",
     description: "Answers to the most common QR code questions: do QR codes expire, are they safe to scan, static vs dynamic, how to scan on iPhone and Android, and more.",
     canonicalPath: "/faq",
+    ogImage: "og-faq",
     keywords: "do qr codes expire, are qr codes safe, how to scan qr code, qr code faq, qr code questions, static vs dynamic qr code",
     jsonLd: {
       "@context": "https://schema.org",
@@ -52,7 +53,7 @@ export default function FaqPage() {
             ))}
           </Accordion>
 
-          <div className="mt-16 bg-primary/5 rounded-2xl p-8 text-center border border-primary/10">
+          <div className="mt-16 bg-muted/40 rounded-lg p-8 text-center border border-border">
             <h2 className="text-2xl font-bold mb-4">Ready to create a free QR code?</h2>
             <p className="text-muted-foreground mb-6">
               No signup, no watermark, no expiry. All 10 QR code types are free.

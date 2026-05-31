@@ -2,6 +2,7 @@ import { useRoute } from "wouter";
 import { Link } from "wouter";
 import { blogPosts } from "@/data/blog-posts";
 import { useSEO } from "@/hooks/useSEO";
+import { SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 import { ChevronRight, Calendar, User, ArrowLeft, ArrowRight } from "lucide-react";
 import NotFoundPage from "./not-found";
 import { Button } from "@/components/ui/button";
@@ -39,9 +40,10 @@ export default function BlogPostPage() {
   const readingTime = Math.ceil(post.content.split(' ').length / 200);
 
   useSEO({
-    title: `${post.title} | QR Generator Blog`,
+    title: `${post.title} | ${SITE_NAME} Blog`,
     description: post.excerpt,
     canonicalPath: `/blog/${post.slug}`,
+    ogImage: `og-blog-${post.slug}`,
     keywords: `qr code, ${post.title.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').slice(0, 6).join(', ')}`,
     jsonLd: {
       "@context": "https://schema.org",
@@ -50,19 +52,19 @@ export default function BlogPostPage() {
       "datePublished": post.date,
       "dateModified": post.date,
       "description": post.excerpt,
-      "url": `https://qrcodegenerator.app/blog/${post.slug}`,
+      "url": `${SITE_ORIGIN}/blog/${post.slug}`,
       "author": {
         "@type": "Person",
         "name": post.author
       },
       "publisher": {
         "@type": "Organization",
-        "name": "QR Generator",
-        "url": "https://qrcodegenerator.app"
+        "name": SITE_NAME,
+        "url": SITE_ORIGIN
       },
       "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": `https://qrcodegenerator.app/blog/${post.slug}`
+        "@id": `${SITE_ORIGIN}/blog/${post.slug}`
       }
     }
   });
@@ -84,7 +86,7 @@ export default function BlogPostPage() {
 
       <article className="py-10 bg-background">
         <div className="container mx-auto px-4 max-w-3xl">
-          <Link href="/blog" className="inline-flex items-center text-sm font-medium text-primary hover:underline mb-8">
+          <Link href="/blog" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to all articles
           </Link>
@@ -102,7 +104,7 @@ export default function BlogPostPage() {
               </div>
               <span className="text-xs bg-muted px-2 py-0.5 rounded-full">{readingTime} min read</span>
             </div>
-            <p className="mt-5 text-base text-muted-foreground leading-relaxed border-l-4 border-primary pl-4 italic">
+            <p className="mt-5 text-base text-muted-foreground leading-relaxed border-l-4 border-foreground pl-4 italic">
               {post.excerpt}
             </p>
           </header>
@@ -118,26 +120,26 @@ export default function BlogPostPage() {
           {(prevPost || nextPost) && (
             <div className="mt-14 pt-8 border-t grid sm:grid-cols-2 gap-4">
               {prevPost && (
-                <Link href={`/blog/${prevPost.slug}`} className="group flex flex-col p-4 bg-card border rounded-xl hover:border-primary/50 transition-all">
+                <Link href={`/blog/${prevPost.slug}`} className="group flex flex-col p-4 bg-card border rounded-xl hover:border-foreground/20 transition-all">
                   <span className="text-xs text-muted-foreground mb-1.5 flex items-center gap-1">
                     <ArrowLeft className="w-3.5 h-3.5" /> Previous article
                   </span>
-                  <span className="text-sm font-semibold group-hover:text-primary transition-colors line-clamp-2">{prevPost.title}</span>
+                  <span className="text-sm font-semibold group-hover:text-foreground transition-colors line-clamp-2">{prevPost.title}</span>
                 </Link>
               )}
               {nextPost && (
-                <Link href={`/blog/${nextPost.slug}`} className="group flex flex-col p-4 bg-card border rounded-xl hover:border-primary/50 transition-all sm:text-right sm:items-end">
+                <Link href={`/blog/${nextPost.slug}`} className="group flex flex-col p-4 bg-card border rounded-xl hover:border-foreground/20 transition-all sm:text-right sm:items-end">
                   <span className="text-xs text-muted-foreground mb-1.5 flex items-center gap-1 sm:flex-row-reverse">
                     Next article <ArrowRight className="w-3.5 h-3.5" />
                   </span>
-                  <span className="text-sm font-semibold group-hover:text-primary transition-colors line-clamp-2">{nextPost.title}</span>
+                  <span className="text-sm font-semibold group-hover:text-foreground transition-colors line-clamp-2">{nextPost.title}</span>
                 </Link>
               )}
             </div>
           )}
 
           {/* CTA */}
-          <div className="mt-12 bg-primary/5 rounded-2xl p-8 text-center border border-primary/10">
+          <div className="mt-12 bg-muted/40 rounded-lg p-8 text-center border border-border">
             <h2 className="text-2xl font-bold mb-3">Create your free QR code</h2>
             <p className="text-muted-foreground mb-6 text-sm">
               No signup required. All 10 QR code types. Codes never expire.

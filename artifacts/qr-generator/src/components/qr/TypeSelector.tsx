@@ -1,5 +1,5 @@
-import { qrTypes } from '@/data/qr-types';
-import { cn } from '@/lib/utils';
+import { qrTypes } from "@/data/qr-types";
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -11,14 +11,45 @@ import {
 interface TypeSelectorProps {
   activeType: string;
   onSelect: (type: string) => void;
+  variant?: "default" | "hero";
 }
 
-export function TypeSelector({ activeType, onSelect }: TypeSelectorProps) {
-  const active = qrTypes.find((t) => t.id === activeType);
+export function TypeSelector({ activeType, onSelect, variant = "default" }: TypeSelectorProps) {
+  if (variant === "hero") {
+    return (
+      <div
+        className="flex gap-1 overflow-x-auto px-4 py-3 border-b border-border/80 scrollbar-none"
+        data-testid="type-tab-row"
+      >
+        {qrTypes.map((type) => {
+          const isActive = activeType === type.id;
+          const Icon = type.icon;
+          return (
+            <button
+              key={type.id}
+              type="button"
+              onClick={() => onSelect(type.id)}
+              data-testid={`button-qr-type-${type.id}`}
+              className={cn(
+                "flex shrink-0 flex-col items-center justify-center gap-1 rounded-xl px-3 py-2 min-w-[64px] transition-all duration-150",
+                isActive
+                  ? "bg-foreground text-background shadow-sm"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
+              )}
+            >
+              <Icon className="h-4 w-4 shrink-0" strokeWidth={isActive ? 2.25 : 2} />
+              <span className="text-[11px] font-medium leading-none whitespace-nowrap">
+                {type.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <>
-      {/* Mobile / Tablet — compact dropdown */}
       <div className="lg:hidden">
         <Select value={activeType} onValueChange={onSelect}>
           <SelectTrigger className="w-full h-10 text-sm" data-testid="select-qr-type">
@@ -33,7 +64,7 @@ export function TypeSelector({ activeType, onSelect }: TypeSelectorProps) {
                 data-testid={`option-qr-type-${type.id}`}
               >
                 <div className="flex items-center gap-2">
-                  <type.icon className="w-3.5 h-3.5 text-primary shrink-0" />
+                  <type.icon className="w-3.5 h-3.5 shrink-0" />
                   <span>{type.label}</span>
                 </div>
               </SelectItem>
@@ -42,7 +73,6 @@ export function TypeSelector({ activeType, onSelect }: TypeSelectorProps) {
         </Select>
       </div>
 
-      {/* Desktop — compact button grid */}
       <div className="hidden lg:grid lg:grid-cols-5 gap-1.5" data-testid="type-button-grid">
         {qrTypes.map((type) => {
           const isActive = activeType === type.id;
@@ -56,11 +86,11 @@ export function TypeSelector({ activeType, onSelect }: TypeSelectorProps) {
               className={cn(
                 "flex flex-col items-center justify-center gap-1 p-2.5 rounded-lg border text-xs font-medium transition-all duration-150",
                 isActive
-                  ? "bg-primary/10 border-primary text-primary"
-                  : "bg-card border-border text-muted-foreground hover:bg-muted hover:text-foreground hover:border-muted-foreground/30"
+                  ? "bg-foreground text-background border-foreground"
+                  : "bg-card border-border text-muted-foreground hover:bg-muted hover:text-foreground hover:border-foreground/20",
               )}
             >
-              <Icon className={cn("w-4 h-4", isActive ? "text-primary" : "")} />
+              <Icon className="w-4 h-4" />
               <span className="leading-none">{type.label}</span>
             </button>
           );
