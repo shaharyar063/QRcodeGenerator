@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { useRoute } from "wouter";
 import { TypeSelector } from "./TypeSelector";
 import { QRForm } from "./QRForm";
 import { QRCustomizer } from "./QRCustomizer";
@@ -6,6 +7,7 @@ import { QRPreview } from "./QRPreview";
 import { QRCodeDisplay } from "./QRCodeDisplay";
 import { formatQRData } from "@/lib/qr-utils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { getQrTypeIdFromSlug, qrTypes } from "@/data/qr-types";
 import {
   DEFAULT_QR_SETTINGS,
   type QRSettings,
@@ -25,6 +27,9 @@ interface QRGeneratorProps {
 const DEFAULT_DOWNLOAD_SIZE = 1024;
 
 export function QRGenerator({ initialType, variant = "hero" }: QRGeneratorProps) {
+  const [match, params] = useRoute("/qr-code-generator/:type");
+  const routeTypeId = match && params?.type ? getQrTypeIdFromSlug(params.type) : undefined;
+
   const [savedType, setSavedType] = useLocalStorage("qr-last-type", "url");
   const [savedSettings, setSavedSettings] = useLocalStorage<QRSettings>(
     "qr-settings",
@@ -37,6 +42,7 @@ export function QRGenerator({ initialType, variant = "hero" }: QRGeneratorProps)
   const [formData, setFormData] = useState<Record<string, unknown>>({});
   const [debouncedFormData, setDebouncedFormData] = useState<Record<string, unknown>>({});
 
+  const resolvedType = routeTypeId ?? activeType;
   const isHero = variant === "hero";
 
   useEffect(() => {
@@ -49,12 +55,18 @@ export function QRGenerator({ initialType, variant = "hero" }: QRGeneratorProps)
   }, [initialType, activeType]);
 
   useEffect(() => {
-    setSavedType(activeType);
-  }, [activeType, setSavedType]);
+    if (routeTypeId) setActiveType(routeTypeId);
+  }, [routeTypeId]);
+
+  useEffect(() => {
+    if (qrTypes.some((type) => type.id === resolvedType)) {
+      setSavedType(resolvedType);
+    }
+  }, [resolvedType, setSavedType]);
 
   const qrDataString = useMemo(
-    () => formatQRData(activeType, debouncedFormData),
-    [activeType, debouncedFormData],
+    () => formatQRData(resolvedType, debouncedFormData),
+    [resolvedType, debouncedFormData],
   );
 
   const handleSettingsChange = useCallback(
@@ -108,12 +120,12 @@ export function QRGenerator({ initialType, variant = "hero" }: QRGeneratorProps)
     return (
       <>
         <div className="widget_container w-full max-w-4xl mx-auto bg-card rounded-2xl border border-border/80 shadow-lg overflow-hidden">
-          <TypeSelector activeType={activeType} onSelect={setActiveType} variant="hero" />
+          <TypeSelector activeType={resolvedType} variant="hero" />
 
           <div className="flex flex-col-reverse lg:flex-row lg:items-stretch">
             <div className="flex-1 min-w-0 p-4 sm:p-5 lg:p-6">
               <QRForm
-                type={activeType}
+                type={resolvedType}
                 data={formData}
                 onChange={setFormData}
                 variant="hero"
@@ -145,9 +157,9 @@ export function QRGenerator({ initialType, variant = "hero" }: QRGeneratorProps)
             <label className="block text-sm font-semibold text-foreground mb-2">
               QR Code Type
             </label>
-            <TypeSelector activeType={activeType} onSelect={setActiveType} />
+            <TypeSelector activeType={resolvedType} />
           </div>
-          <QRForm type={activeType} data={formData} onChange={setFormData} />
+          <QRForm type={resolvedType} data={formData} onChange={setFormData} />
           <QRCustomizer settings={savedSettings} onChange={handleSettingsChange} />
         </div>
         <div className="w-full lg:w-[360px] xl:w-[400px] p-5 md:p-7 bg-muted/20 flex flex-col items-center">

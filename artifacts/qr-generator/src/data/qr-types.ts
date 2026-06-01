@@ -3,6 +3,14 @@ import { Link, Wifi, Mail, Phone, MessageSquare, Contact, MessageCircle, FileTex
 /** Top 3 QR types shown directly in the header nav */
 export const primaryNavQrTypeIds = ["url", "wifi", "vcard"] as const;
 
+export function getQrTypePath(slug: string): string {
+  return `/qr-code-generator/${slug}`;
+}
+
+export function getQrTypeIdFromSlug(slug: string): string | undefined {
+  return qrTypes.find((type) => type.slug === slug)?.id;
+}
+
 export const qrTypes = [
   {
     id: "url",

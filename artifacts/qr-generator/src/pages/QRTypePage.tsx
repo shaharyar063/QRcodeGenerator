@@ -8,7 +8,7 @@ import { useSEO } from "@/hooks/useSEO";
 import NotFoundPage from "./not-found";
 import { SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 
-const typeContent: Record<string, {
+export const typeContent: Record<string, {
   metaTitle: string;
   metaDescription: string;
   keywords: string;
