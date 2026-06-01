@@ -22,4 +22,4 @@ User-agent: OAI-SearchBot
 Allow: /
 
 # Sitemap
-Sitemap: https://frreeqr-code-generator.com/sitemap.xml
+Sitemap: https://freeqr-code-generator.com/sitemap.xml

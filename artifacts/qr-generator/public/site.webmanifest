@@ -1,7 +1,7 @@
 {
   "name": "QR Code Generator — Free QR Code Creator",
   "short_name": "QR Code Generator",
-  "description": "Create custom QR codes for free at frreeqr-code-generator.com. No signup required.",
+  "description": "Create custom QR codes for free at freeqr-code-generator.com. No signup required.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
