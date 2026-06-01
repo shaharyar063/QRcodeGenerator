@@ -7,7 +7,7 @@ import {
   ogImageUrlForMeta,
   type RouteSeoMeta,
 } from "../src/data/route-seo.ts";
-import { buildStaticSeoNavHtml } from "../src/data/static-seo-nav.ts";
+import { buildStaticSeoShellHtml } from "../src/data/static-seo-nav.ts";
 import { OG_CARD_HEIGHT, OG_CARD_WIDTH } from "../src/data/og-illustrations.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -74,8 +74,8 @@ function patchHtml(html: string, meta: RouteSeoMeta): string {
     );
   }
 
-  if (!out.includes('id="static-seo-nav"')) {
-    out = out.replace("</body>", `${buildStaticSeoNavHtml()}\n  </body>`);
+  if (!out.includes('id="static-seo-content"')) {
+    out = out.replace("</body>", `${buildStaticSeoShellHtml(meta.h1, meta.description)}\n  </body>`);
   }
 
   return out;

@@ -6,6 +6,7 @@ import { SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 export interface RouteSeoMeta {
   path: string;
   title: string;
+  h1: string;
   description: string;
   ogImage: string;
   keywords?: string;
@@ -15,6 +16,7 @@ const staticRoutes: RouteSeoMeta[] = [
   {
     path: "/",
     title: `Free ${SITE_NAME} — Create QR Codes Instantly, No Signup`,
+    h1: "Free QR Code Generator",
     description:
       "Create free, custom QR codes for URLs, WiFi, vCards, WhatsApp, email & more. No signup required. Download high-quality PNG, SVG or JPEG. Codes never expire.",
     ogImage: "og-home",
@@ -24,6 +26,7 @@ const staticRoutes: RouteSeoMeta[] = [
   {
     path: "/faq",
     title: "QR Code FAQ — Do QR Codes Expire? Are They Safe? How to Scan?",
+    h1: "QR Code Frequently Asked Questions",
     description:
       "Answers to the most common QR code questions: do QR codes expire, are they safe to scan, static vs dynamic, how to scan on iPhone and Android, and more.",
     ogImage: "og-faq",
@@ -33,24 +36,28 @@ const staticRoutes: RouteSeoMeta[] = [
   {
     path: "/contact",
     title: `Contact | ${SITE_NAME} — Free QR Code Generator Support`,
+    h1: "Contact Us",
     description: "Questions about our free QR code generator? Send us a message. We typically respond within 24 hours.",
     ogImage: "og-contact",
   },
   {
     path: "/privacy-policy",
     title: `Privacy Policy | ${SITE_NAME} — No Data Collected, No Tracking`,
+    h1: "Privacy Policy",
     description: `${SITE_NAME} runs entirely in your browser. We do not collect, store, or sell your personal data. Your QR code content never leaves your device.`,
     ogImage: "og-privacy",
   },
   {
     path: "/terms",
     title: `Terms of Service | ${SITE_NAME} — Free Static QR Code Tool`,
+    h1: "Terms of Service",
     description: `Terms of Service for ${SITE_NAME}. Free static QR codes generated in your browser. No account required. Read our disclaimers and acceptable use rules.`,
     ogImage: "og-terms",
   },
   {
     path: "/blog",
     title: "QR Code Blog — How to Scan, Create & Use QR Codes in 2025",
+    h1: "QR Code Guides & Tutorials",
     description:
       "Guides, tutorials, and tips on QR codes: how to scan on iPhone and Android, create WiFi QR codes, static vs dynamic, business card QR codes, and more.",
     ogImage: "og-blog",
@@ -67,6 +74,7 @@ export function getAllRouteSeoMeta(): RouteSeoMeta[] {
       {
         path: `/qr-code-generator/${type.slug}`,
         title: content.metaTitle,
+        h1: content.h1,
         description: content.metaDescription,
         ogImage: `og-qr-${type.slug}`,
         keywords: content.keywords,
@@ -77,6 +85,7 @@ export function getAllRouteSeoMeta(): RouteSeoMeta[] {
   const blogRoutes: RouteSeoMeta[] = blogPosts.map((post) => ({
     path: `/blog/${post.slug}`,
     title: `${post.title} | ${SITE_NAME} Blog`,
+    h1: post.title,
     description: post.excerpt,
     ogImage: `og-blog-${post.slug}`,
     keywords: `qr code, ${post.title

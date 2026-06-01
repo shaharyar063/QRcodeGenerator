@@ -81,7 +81,7 @@ export default function HomePage() {
                 <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center text-foreground">
                   <Icon className="w-5 h-5" />
                 </div>
-                <h3 className="font-semibold text-sm">{label}</h3>
+                <p className="font-semibold text-sm">{label}</p>
                 <p className="text-xs text-muted-foreground">{sub}</p>
               </div>
             ))}

@@ -18,7 +18,7 @@ function linkList(items: { href: string; label: string }[]): string {
     .join("\n          ");
 }
 
-/** Crawler-visible internal links injected into prerendered HTML shells. */
+/** Crawler-visible internal links — nested under page H1 as H2 sections. */
 export function buildStaticSeoNavHtml(): string {
   const qrLinks = qrTypes.map((type) => ({
     href: getQrTypePath(type.slug),
@@ -54,4 +54,16 @@ export function buildStaticSeoNavHtml(): string {
           ${linkList(blogLinks)}
       </ul>
     </nav>`;
+}
+
+/** Crawler-visible page shell: one H1, intro, then nav with H2 sections. */
+export function buildStaticSeoShellHtml(h1: string, description: string): string {
+  return `
+    <div id="static-seo-content">
+      <header>
+        <h1>${escapeHtml(h1)}</h1>
+        <p>${escapeHtml(description)}</p>
+      </header>
+      ${buildStaticSeoNavHtml()}
+    </div>`;
 }

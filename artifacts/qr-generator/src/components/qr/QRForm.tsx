@@ -31,9 +31,9 @@ function HeroField({
   return (
     <div className="space-y-3">
       <div>
-        <h3 className="text-sm sm:text-base font-semibold text-foreground leading-snug">
+        <h2 className="text-sm sm:text-base font-semibold text-foreground leading-snug">
           {heading}
-        </h3>
+        </h2>
         <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
       </div>
       {children}

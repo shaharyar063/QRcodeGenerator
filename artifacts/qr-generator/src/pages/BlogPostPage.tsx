@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 function renderMarkdown(content: string): string {
   return content
     .trim()
-    .replace(/### (.*?)(\n|$)/g, '<h3 class="text-xl font-bold mt-8 mb-3 text-foreground">$1</h3>')
+    .replace(/### (.*?)(\n|$)/g, '<h2 class="text-xl font-bold mt-8 mb-3 text-foreground">$1</h2>')
     .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-foreground">$1</strong>')
     .replace(/^(\d+)\. (.*?)(\n|$)/gm, '<li class="ml-4 list-decimal">$2</li>')
     .replace(/^- (.*?)(\n|$)/gm, '<li class="ml-4 list-disc text-muted-foreground">$1</li>')
