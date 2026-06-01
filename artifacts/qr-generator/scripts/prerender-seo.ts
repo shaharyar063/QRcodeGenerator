@@ -7,6 +7,7 @@ import {
   ogImageUrlForMeta,
   type RouteSeoMeta,
 } from "../src/data/route-seo.ts";
+import { buildStaticSeoNavHtml } from "../src/data/static-seo-nav.ts";
 import { OG_CARD_HEIGHT, OG_CARD_WIDTH } from "../src/data/og-illustrations.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -71,6 +72,10 @@ function patchHtml(html: string, meta: RouteSeoMeta): string {
       /\s*<!-- WebSite \+ Organization JSON-LD -->[\s\S]*?<\/script>\s*/m,
       "\n",
     );
+  }
+
+  if (!out.includes('id="static-seo-nav"')) {
+    out = out.replace("</body>", `${buildStaticSeoNavHtml()}\n  </body>`);
   }
 
   return out;
