@@ -76,12 +76,16 @@ function patchHtml(html: string, meta: RouteSeoMeta): string {
   return out;
 }
 
+function routePathToOutputFile(routePath: string): string {
+  if (routePath === "/") {
+    return path.join(distDir, "index.html");
+  }
+  return path.join(distDir, `${routePath.slice(1)}.html`);
+}
+
 async function writeRouteHtml(template: string, meta: RouteSeoMeta): Promise<void> {
   const html = patchHtml(template, meta);
-  const outputPath =
-    meta.path === "/"
-      ? path.join(distDir, "index.html")
-      : path.join(distDir, meta.path.slice(1), "index.html");
+  const outputPath = routePathToOutputFile(meta.path);
 
   await mkdir(path.dirname(outputPath), { recursive: true });
   await writeFile(outputPath, html, "utf8");
